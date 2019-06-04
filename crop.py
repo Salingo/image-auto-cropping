@@ -7,7 +7,6 @@ CROP_FOLDER = sys.argv[1]
 def trim(im):
     bg = Image.new(im.mode, im.size, im.getpixel((0,0))) # Get the background color from the top left pixel
     diff = ImageChops.difference(im, bg)
-    diff = ImageChops.add(diff, diff)
     bbox = diff.getbbox()
     if bbox:
         return im.crop(bbox)
