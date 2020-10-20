@@ -3,8 +3,8 @@ import sys
 import numpy as np
 from PIL import Image, ImageChops
 
-CROP_FOLDER = sys.argv[-2]
-TRIM_SET = int(sys.argv[-1])
+SOURCE_FOLDER = sys.argv[-2]
+TRIM_GROUP_MODE = int(sys.argv[-1])
 
 def trim_single(img):
 	bg = Image.new(img.mode, img.size, img.getpixel((0,0)))
@@ -14,7 +14,7 @@ def trim_single(img):
 	return img_cropped
 
 ''' Trim all images in the SOURCE_FOLDER by the common minimum bbox '''
-def trim_set(imgs):
+def trim_group(imgs):
 	bboxs = []
 	for img in imgs:
 		bg = Image.new(img.mode, img.size, img.getpixel((0,0)))
@@ -35,20 +35,20 @@ def trim_set(imgs):
 
 
 if __name__ == "__main__":
-	file_names = os.listdir(CROP_FOLDER)
+	file_names = os.listdir(SOURCE_FOLDER)
 	images = []
 	images_name = []
 	for file_name in file_names:
 		if file_name.split('.')[1] == 'png' or file_name.split('.')[1] == 'jpg' or file_name.split('.')[1] == 'jpeg':
-			image = Image.open(os.path.join(CROP_FOLDER, file_name))
-			if TRIM_SET:
+			image = Image.open(os.path.join(SOURCE_FOLDER, file_name))
+			if TRIM_GROUP_MODE:
 				images.append(image)
 				images_name.append(file_name)
 			else:
 				image_cropped = trim_single(image)
-				image_cropped.save(os.path.join(CROP_FOLDER, file_name))
+				image_cropped.save(os.path.join(SOURCE_FOLDER, file_name))
 				print("\ncropped: "+file_name)
-	if TRIM_SET:
-		images_cropped = trim_set(images)
+	if TRIM_GROUP_MODE:
+		images_cropped = trim_group(images)
 		for i in range(len(images_cropped)):
-			images_cropped[i].save(os.path.join(CROP_FOLDER, images_name[i]))
+			images_cropped[i].save(os.path.join(SOURCE_FOLDER, images_name[i]))
