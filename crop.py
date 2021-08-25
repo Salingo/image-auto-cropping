@@ -7,8 +7,9 @@ SOURCE_FOLDER = sys.argv[-2]
 TRIM_GROUP_MODE = int(sys.argv[-1])
 
 def trim_single(img):
-	bg = Image.new(img.mode, img.size, img.getpixel((0,0)))
-	diff = ImageChops.difference(img, bg)
+	img_temp = img.convert('RGB')
+	bg = Image.new(img_temp.mode, img_temp.size, img_temp.getpixel((0,0)))
+	diff = ImageChops.difference(img_temp, bg)
 	bbox = diff.getbbox()
 	img_cropped = img.crop(bbox)
 	return img_cropped
@@ -17,8 +18,9 @@ def trim_single(img):
 def trim_group(imgs):
 	bboxs = []
 	for img in imgs:
-		bg = Image.new(img.mode, img.size, img.getpixel((0,0)))
-		diff = ImageChops.difference(img, bg)
+		img_temp = img.convert('RGB')
+		bg = Image.new(img_temp.mode, img_temp.size, img_temp.getpixel((0,0)))
+		diff = ImageChops.difference(img_temp, bg)
 		bbox = diff.getbbox()
 		bboxs.append(bbox)
 	bboxs = np.array(bboxs)
